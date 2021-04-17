@@ -17,7 +17,7 @@ app = FastAPI()
 def verify(auth: Optional[str] = Header(None)):
     result = check_auth(auth)
     if result == False:
-        raise 403
+        raise HTTPException(status_code=403, detail="Login")
 
     ac = path_handler(result["role"], "*")
     match ac:
@@ -26,13 +26,13 @@ def verify(auth: Optional[str] = Header(None)):
         case False:
             return 401
         case _:
-            raise 403
+            raise HTTPException(status_code=403, detail="Login")
 
 @app.get("/verified_route_specific_role", status_code=201)
 def verify(auth: Optional[str] = Header(None)):
     result = check_auth(auth)
     if result == False:
-        raise 403
+        raise HTTPException(status_code=403, detail="Login")
         
     ac = path_handler(result["role"], "admin")
     match ac:
@@ -41,7 +41,7 @@ def verify(auth: Optional[str] = Header(None)):
         case False:
             return 401
         case _:
-            raise 403
+            raise HTTPException(status_code=403, detail="Login")
 
 
 class LoginBody(BaseModel):
@@ -55,16 +55,16 @@ def login(user: LoginBody):
     result = query_return(query, data, cursor, cnx)
 
     if result == []:
-        raise 403
+        raise HTTPException(status_code=403, detail="Login")
     else:
         if result[0]["password"] == user.password:
             return auth_user(result[0]["id"], result[0]["role"])
         else:
-            raise 403
+            raise HTTPException(status_code=403, detail="Login")
 
 @app.patch("/refresh_token", status_code=200)
 def refresh(auth: Optional[str] = Header(None)):
     result = check_auth(auth)
     if result == False:
-        return 403
+        raise HTTPException(status_code=403, detail="Login")
     return auth_user(result["user_id"], result["role"])
