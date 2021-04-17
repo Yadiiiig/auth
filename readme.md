@@ -1,4 +1,4 @@
-# Foobar
+# py-auth
 
 py-auth is an example repository of FastAPI together with JWT. Including a tiny role based system.
 
