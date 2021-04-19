@@ -27,3 +27,5 @@ def path_handler(role, allowed):
         return True
     elif allowed == role:
         return True
+    
+    return False
